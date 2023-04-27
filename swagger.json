@@ -9,7 +9,7 @@
   "produces": ["application/json"],
   "servers": [
     { "url": "http://localhost:3001/api" },
-    { "url": "https://petssupportback-production.up.railway.app/api" }
+    { "url": "https://moviessoftryzen.onrender.com/api" }
   ],
   "tags": [
     {
