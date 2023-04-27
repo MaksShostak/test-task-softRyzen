@@ -2,13 +2,13 @@ const bcrypt = require("bcryptjs");
 
 const { User } = require("../../models/userSchema");
 
-const { HttpError } = require("../../helpers");
+const { httpError } = require("../../helpers");
 
 const register = async (req, res) => {
   const { userName, email, password } = req.body;
   const isUser = await User.findOne({ email });
   if (isUser) {
-    throw HttpError(409, "Email in use");
+    throw httpError(409, "Email in use");
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
