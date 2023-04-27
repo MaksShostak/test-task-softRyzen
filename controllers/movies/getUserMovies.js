@@ -9,7 +9,10 @@ const getUserMovies = async (req, res) => {
     .sort({ updatedAt: -1 })
     .skip(skip)
     .limit(limit);
-  res.status(200).json(result);
+
+  const totalPages = result.length === 0 ? 1 : Math.ceil(result.length / limit);
+
+  res.status(200).json({ movies: result, totalPages });
 };
 
 module.exports = getUserMovies;

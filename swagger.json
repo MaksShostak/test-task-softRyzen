@@ -1,0 +1,858 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Swagger softRyzenTest ",
+    "description": "This is the specification for the softRyzenTest server. ",
+    "version": "0.0.1"
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [
+    { "url": "http://localhost:3001/api" },
+    { "url": "https://petssupportback-production.up.railway.app/api" }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+
+    {
+      "name": "Movies",
+      "description": "Operations with our notices"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "description": "Registration's object",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Email in use",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "description": "User login",
+        "parameters": [],
+        "requestBody": {
+          "description": "User's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Email or password invalid",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "description": "Get current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Token invalid",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized.Please,provide a token",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Logout user",
+        "description": "Logout user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Token invalid",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized.Please,provide a token",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/movies": {
+      "post": {
+        "tags": ["Movies"],
+        "summary": "Add movie",
+        "description": "Add movie",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Notices object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMovieRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddMovieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized.Please,provide a token",
+            "content": {}
+          },
+          "403": {
+            "description": "Invalid token",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/movies/user": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get all users movies",
+        "description": "Get all users movies",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page number for pagination",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "the number of query objects to display on one page for pagination",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Saccess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserMoviesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized.Please,provide a token",
+            "content": {}
+          },
+          "403": {
+            "description": "Invalid token",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get one movie by Id",
+        "description": "Get one movie by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMovieByIdResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not valid ID",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Movies"],
+        "summary": "Update movie info",
+        "description": "Update movie info",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "movie's object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMovieRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saccses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMovieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized.Please,provide a token",
+            "content": {}
+          },
+          "403": {
+            "description": "Invalid token",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Movies"],
+        "summary": "Delete movie by ID",
+        "description": "Delete movie by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveMovieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not valid ID",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized.Please,provide a token",
+            "content": {}
+          },
+          "403": {
+            "description": "Invalid token",
+            "content": {}
+          },
+          "404": {
+            "description": "Failure, notice with id: ${noticeId} not found!",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["userNname", "email", "password"],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "description": "User's name only  latin letter,all number and all special characters",
+            "example": "Maks Shos"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "example@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "userName": {
+                "type": "string",
+                "description": "User's name only  latin letter,all number and all special characters",
+                "example": "Maks Shos"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "example@gmail.com"
+              }
+            }
+          }
+        },
+        "example": {
+          "user": {
+            "userName": "Maks",
+            "email": "Maksa@gmail.com"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "example@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "User's accessToken",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjJiN2VlYmNlZjEzOGRmZTkxOGU3MyIsImlhdCI6MTY3Mjg0OTUzNiwiZXhwIjoxNjcyODc4MzM2fQ.2O1A2OFCpuH00pMM1GgA-Dhy1kKCNEHDd80LrAyE8ac"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjJiN2VlYmNlZjEzOGRmZTkxOGU3MyIsImlhdCI6MTY3Mjg0OTUzNiwiZXhwIjoxNjcyODc4MzM2fQ.2O1A2OFCpuH00pMM1GgA-Dhy1kKCNEHDd80LrAyE8ac"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "userName": {
+                "type": "string",
+                "description": "User's name only  latin letter,all number and all special characters",
+                "example": "Maks"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "example@gmail.com"
+              }
+            }
+          }
+        },
+        "example": {
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjJiN2VlYmNlZjEzOGRmZTkxOGU3MyIsImlhdCI6MTY3Mjg0OTUzNiwiZXhwIjoxNjcyODc4MzM2fQ.2O1A2OFCpuH00pMM1GgA-Dhy1kKCNEHDd80LrAyE8ac",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjJiN2VlYmNlZjEzOGRmZTkxOGU3MyIsImlhdCI6MTY3Mjg0OTUzNiwiZXhwIjoxNjczNDU0MzM2fQ.W6B7E3iIZo_f0S7xNonPZsLtMYk0ArK1Bbxnqmhp_Gs",
+          "user": {
+            "email": "maks@gmail.com",
+            "name": "Jo"
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "description": "User's name only  latin letter,all number and all special characters",
+            "example": "Maks"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "example@gmail.com"
+          },
+          "_id": {
+            "type": "string",
+            "description": "id",
+            "example": "63b420f8613598919c6a71a8"
+          }
+        },
+        "example": {
+          "userName": "Maks",
+          "email": "Maks@gmail.com",
+          "_id": "63b420f8613598919c6a71a8"
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "id ",
+            "example": "63b420f8613598919c6a71a8"
+          },
+          "message": {
+            "type": "string",
+            "description": "a message about the successful logout of the user ",
+            "example": "Logout success"
+          }
+        },
+        "example": {
+          "message": "Logout success",
+          "_id": "63b420f8613598919c6a71a8"
+        }
+      },
+
+      "UpdateMovieRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title by movie",
+            "example": "Top gun"
+          },
+          "director": {
+            "type": "string",
+            "description": "film director ",
+            "example": "Joseph Kosinski"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "release date",
+            "example": "22-02-2020"
+          }
+        },
+        "example": {
+          "title": "Top gun 2",
+          "director": "Joseph Kosinski",
+          "releaseDate": "022-02-2022"
+        }
+      },
+      "UpdateMovieResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Id of movie",
+            "example": "63b4217e613598919c6a71ad"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title by movie",
+            "example": "Top gun"
+          },
+          "director": {
+            "type": "string",
+            "description": "film director ",
+            "example": "Joseph Kosinski"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "release date",
+            "example": "22-02-2020"
+          },
+          "owner": {
+            "type": "string",
+            "description": "movie owner id",
+            "example": "63b420f8613598919c6a71a8"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of add movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date of update movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          }
+        },
+        "example": {
+          "_id": "63b4217e613598919c6a71ad",
+          "title": "Top gun 2",
+          "director": "Joseph Kosinski",
+          "releaseDate": "022-02-2022",
+          "owner": "63b420f8613598919c6a71a8",
+          "createdAt": "2023-01-03T12:37:18.187Z",
+          "updatedAt": "2023-01-03T12:37:18.187Z"
+        }
+      },
+      "AddMovieRequest": {
+        "type": "object",
+        "required": ["category", "title", "sex", "location"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title by movie",
+            "example": "Top gun"
+          },
+          "director": {
+            "type": "string",
+            "description": "film director ",
+            "example": "Joseph Kosinski"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "release date",
+            "example": "22-02-2020"
+          }
+        },
+        "example": {
+          "title": "Top gun",
+          "director": "Joseph Kosinski",
+          "releaseDate": "022-02-2020"
+        }
+      },
+      "AddMovieResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title by movie",
+            "example": "Top gun"
+          },
+          "director": {
+            "type": "string",
+            "description": "film director ",
+            "example": "Joseph Kosinski"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "release date",
+            "example": "22-02-2020"
+          },
+          "owner": {
+            "type": "string",
+            "description": "movie owner id",
+            "example": "63b420f8613598919c6a71a8"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Id of movie",
+            "example": "63b4217e613598919c6a71ad"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of add movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date of update movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          }
+        },
+        "example": {
+          "title": "Top gun",
+          "director": "Joseph Kosinski",
+          "releaseDate": "022-02-2020",
+          "owner": "63b420f8613598919c6a71a8",
+          "_id": "63b4217e613598919c6a71ad",
+          "createdAt": "2023-01-03T12:37:18.187Z",
+          "updatedAt": "2023-01-03T12:37:18.187Z"
+        }
+      },
+      "GetUserMoviesResponse": {
+        "type": "object",
+        "properties": {
+          "movies": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Id of movie",
+                  "example": "63b4217e613598919c6a71ad"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title by movie",
+                  "example": "Top gun"
+                },
+                "director": {
+                  "type": "string",
+                  "description": "film director ",
+                  "example": "Joseph Kosinski"
+                },
+                "releaseDate": {
+                  "type": "string",
+                  "description": "release date",
+                  "example": "22-02-2020"
+                },
+                "owner": {
+                  "type": "string",
+                  "description": "movie owner id",
+                  "example": "63b420f8613598919c6a71a8"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Date of add movie to database",
+                  "example": "2023-01-05T15:28:01.426Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "Date of update movie to database",
+                  "example": "2023-01-05T15:28:01.426Z"
+                }
+              }
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "total pages",
+            "example": 1
+          }
+        },
+        "example": {
+          "movies": [
+            {
+              "_id": "63b4217e613598919c6a71ad",
+              "title": "Top gun",
+              "director": "Joseph Kosinski",
+              "releaseDate": "022-02-2020",
+              "owner": "63b420f8613598919c6a71a8",
+              "createdAt": "2023-01-03T12:37:18.187Z",
+              "updatedAt": "2023-01-03T12:37:18.187Z"
+            }
+          ],
+          "totalPages": 1
+        }
+      },
+      "GetMovieByIdResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title by movie",
+            "example": "Top gun"
+          },
+          "director": {
+            "type": "string",
+            "description": "film director ",
+            "example": "Joseph Kosinski"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "release date",
+            "example": "22-02-2020"
+          },
+          "owner": {
+            "type": "string",
+            "description": "movie owner id",
+            "example": "63b420f8613598919c6a71a8"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Id of movie",
+            "example": "63b4217e613598919c6a71ad"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of add movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date of update movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          }
+        },
+        "example": {
+          "title": "Top gun",
+          "director": "Joseph Kosinski",
+          "releaseDate": "022-02-2020",
+          "owner": "63b420f8613598919c6a71a8",
+          "_id": "63b4217e613598919c6a71ad",
+          "createdAt": "2023-01-03T12:37:18.187Z",
+          "updatedAt": "2023-01-03T12:37:18.187Z"
+        }
+      },
+      "RemoveMovieResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message about success deleted",
+            "example": "movie with id: 63b4217e613598919c6a71ad has been deleted"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title by movie",
+            "example": "Top gun"
+          },
+          "director": {
+            "type": "string",
+            "description": "film director ",
+            "example": "Joseph Kosinski"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "release date",
+            "example": "22-02-2020"
+          },
+
+          "owner": {
+            "type": "string",
+            "description": "movie owner id",
+            "example": "63b420f8613598919c6a71a8"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Id of movie",
+            "example": "63b4217e613598919c6a71ad"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of add movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Date of update movie to database",
+            "example": "2023-01-05T15:28:01.426Z"
+          }
+        },
+        "example": {
+          "message": "notice with id: 63b4217e613598919c6a71ad has been deleted",
+          "title": "Top gun",
+          "director": "Joseph Kosinski",
+          "releaseDate": "122-302-2020",
+          "owner": "63b420f8613598919c6a71a8",
+          "_id": "63b4217e613598919c6a71ad",
+          "createdAt": "2023-01-03T12:37:18.187Z",
+          "updatedAt": "2023-01-03T12:37:18.187Z"
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -26,8 +26,8 @@ const login = async (req, res) => {
     accessToken,
     refreshToken,
     user: {
-      email: user.email,
       userName: user.userName,
+      email: user.email,
     },
   });
 };

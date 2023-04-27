@@ -18,11 +18,10 @@ const register = async (req, res) => {
     email,
     password: hashPassword,
   });
-
   res.status(201).json({
     user: {
-      email: newUser.email,
       name: newUser.userName,
+      email: newUser.email,
     },
   });
 };
